@@ -3,7 +3,7 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome to the Plant Tracking App!</h1>
-      <p>Welcome back!</p> : <a href="/login">Please log in</a>
+      <a href="/api/auth/login">Login</a>
     </div>
   );
 }
