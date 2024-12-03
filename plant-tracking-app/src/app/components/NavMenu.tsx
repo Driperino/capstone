@@ -43,6 +43,7 @@ export default function NavMenu() {
             Home
           </li>
         </Link>
+        {/* Only show protected route if signed in (session exists) this is a simple example*/}
         <Link href="/protected">
           <li
             className={
@@ -50,15 +51,6 @@ export default function NavMenu() {
             }
           >
             Protected Route
-          </li>
-        </Link>
-        <Link href="/serverAction">
-          <li
-            className={
-              pathname === "/serverAction" ? ACTIVE_ROUTE : INACTIVE_ROUTE
-            }
-          >
-            server action
           </li>
         </Link>
       </ul>
