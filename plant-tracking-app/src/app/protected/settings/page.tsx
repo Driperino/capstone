@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { SettingsForm } from "@/components/settings/SettingsForm";
 
 export default async function ProtectedRoute() {
   const session = await getServerSession();
@@ -8,10 +9,9 @@ export default async function ProtectedRoute() {
   }
 
   return (
-    <div>
-      This is a protected route
-      <br />
-      You will only see this if you are signed in
+    <div className="b-2 b-black ">
+      <div className="p-4">Settings</div>
+      <div></div>
     </div>
   );
 }

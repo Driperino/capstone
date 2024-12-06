@@ -1,24 +1,18 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import { getServerSession } from "next-auth";
-import SessionProvider from "./components/SessionProvider";
-import NavMenu from "./components/NavMenu";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import SessionProvider from "@/components/auth/SessionProvider";
+import { AppSidebar } from "@/components/app-sidebar";
+import { getCurrentUser } from "@/lib/session";
+import {
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
 
 export const metadata: Metadata = {
-  title: "Plant Tracking App",
-  description: "Track your plants",
+  title: "Leaf Matrix",
+  description: "Grow Smarter",
 };
 
 export default async function RootLayout({
@@ -27,16 +21,21 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
+  const user = await getCurrentUser();
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body>
         <SessionProvider session={session}>
-          <main className="mx-auto max-w-5xl text-2xl flex gap-2">
-            <NavMenu />
-            {children}
-          </main>
+          <SidebarProvider>
+            {user && <AppSidebar user={user} />}
+            <SidebarInset>
+              <header className="flex h-16 shrink-0 items-center gap-2 border-b px-2">
+                <SidebarTrigger className="-ml-1" />
+              </header>
+              <main className="flex-1 mx-auto">{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
         </SessionProvider>
       </body>
     </html>
