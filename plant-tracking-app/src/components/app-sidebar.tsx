@@ -123,6 +123,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 </SidebarMenuItem>
               ))}
               {/* Settings Dropdown */}
+              <hr className="flex-1 border-t border-sidebar-border" />
               <Collapsible>
                 <SidebarGroupLabel asChild>
                   <CollapsibleTrigger className="flex items-center w-full">
@@ -131,6 +132,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                   </CollapsibleTrigger>
                 </SidebarGroupLabel>
+                <hr className="flex-1 border-t border-sidebar-border" />
                 <CollapsibleContent>
                   {sidebarItems.map((item, index) => (
                     <SidebarMenuItem key={index}>

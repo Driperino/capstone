@@ -18,7 +18,7 @@ const NotificationSettings = () => {
   const [differentSettings, setDifferentSettings] = useState(false);
 
   return (
-    <div className="p-6 max-w-xlrounded-md shadow-lg">
+    <div className="p-6 mt-16 max-w-xlrounded-md shadow-lg">
       <h1 className="text-2xl font-bold mb-2">Notifications</h1>
       <p className="text-sm text-gray-400 mb-6">
         Configure how you receive notifications.

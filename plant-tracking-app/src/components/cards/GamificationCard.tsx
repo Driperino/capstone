@@ -40,7 +40,7 @@ export const GamificationCard = ({ userEmail }: { userEmail: string }) => {
 
   return (
     <MotionGrowAndFloat>
-      <Card className="flex flex-col h-full">
+      <Card className="flex flex-col px-2 h-full">
         <CardHeader>
           <CardTitle>Gamification Station</CardTitle>
         </CardHeader>

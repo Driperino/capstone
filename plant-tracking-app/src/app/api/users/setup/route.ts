@@ -24,7 +24,7 @@ export async function PUT(request: NextRequest) {
 
     console.log(`Updating user with email: ${email}`); // Debug Log
 
-    const setupCompleted = Boolean(timeZone && hardinessZone && preferredTheme);
+    const setupCompleted = Boolean(timeZone && hardinessZone);
 
     const result = await db.collection(COLLECTION_NAME).updateOne(
       { email },
