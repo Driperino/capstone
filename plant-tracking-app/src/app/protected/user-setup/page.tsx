@@ -13,16 +13,18 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import moment from "moment-timezone";
+import { Input } from "@/components/ui/input";
 
-export default function UserSetupPage() {
+export default function UserSettingsPage() {
   const { data: session } = useSession();
   const [timeZone, setTimeZone] = useState("");
   const [hardinessZone, setHardinessZone] = useState("");
   const [preferredTheme, setPreferredTheme] = useState("system");
-  const router = useRouter();
+  const [name, setName] = useState("");
   const [availableTimeZones, setAvailableTimeZones] = useState<
     { name: string; label: string }[]
   >([]);
+  const router = useRouter();
 
   useEffect(() => {
     // Load the time zone names dynamically from moment-timezone
@@ -35,6 +37,28 @@ export default function UserSetupPage() {
     });
     setAvailableTimeZones(zones);
   }, []);
+
+  useEffect(() => {
+    // Load the user's current settings from the database
+    async function loadUserSettings() {
+      if (session && session.user) {
+        try {
+          const response = await axios.get(`/api/users/${session.user.email}`);
+          const userData = response.data;
+          if (userData) {
+            setName(userData.name || "");
+            setTimeZone(userData.timeZone || "");
+            setHardinessZone(userData.hardinessZone || "");
+            setPreferredTheme(userData.preferredTheme || "system");
+            setTheme(userData.preferredTheme || "system");
+          }
+        } catch (error) {
+          console.error("Error loading user settings:", error);
+        }
+      }
+    }
+    loadUserSettings();
+  }, [session, setTheme]);
 
   const hardinessZones = [
     "1",
@@ -53,11 +77,7 @@ export default function UserSetupPage() {
   ];
 
   if (!session) {
-    return (
-      <div>
-        Not sure how you got here... Please log in to complete your setup.
-      </div>
-    );
+    return <div>Please log in to view your settings.</div>;
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -71,23 +91,35 @@ export default function UserSetupPage() {
     try {
       await axios.put("/api/users/setup", {
         email: session.user.email,
+        name,
         timeZone,
         hardinessZone,
-        preferredTheme,
       });
+      setTheme(preferredTheme); // Update the theme based on user preference
       router.push("/protected/dashboard");
     } catch (error) {
-      console.error("Error saving user setup data:", error);
+      console.error("Error saving user settings:", error);
     }
   }
 
   return (
     <Card className="max-w-lg mx-auto mt-10">
       <CardHeader>
-        <CardTitle>User Setup</CardTitle>
+        <CardTitle>User Settings</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1 w-full"
+            />
+          </div>
           <div className="mb-4">
             <Label htmlFor="timeZone">Time Zone</Label>
             <select
@@ -122,21 +154,8 @@ export default function UserSetupPage() {
               ))}
             </select>
           </div>
-          <div className="mb-4">
-            <Label htmlFor="preferredTheme">Preferred Theme</Label>
-            <select
-              id="preferredTheme"
-              value={preferredTheme}
-              onChange={(e) => setPreferredTheme(e.target.value)}
-              className="mt-1 w-full border p-2"
-            >
-              <option value="system">System Preferred</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-          <CardFooter className="justify-center">
-            <Button type="submit">Save Setup</Button>
+          <CardFooter>
+            <Button type="submit">Save Settings</Button>
           </CardFooter>
         </form>
       </CardContent>

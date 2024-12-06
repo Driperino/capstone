@@ -11,5 +11,9 @@ export default async function ProtectedLayout({
     redirect("/api/auth/signin");
   }
 
-  return <div className="flex justify-center text-center">{children}</div>;
+  return (
+    <div className="flex justify-center items-center text-center">
+      {children}
+    </div>
+  );
 }

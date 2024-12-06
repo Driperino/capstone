@@ -9,6 +9,7 @@ const COLLECTION_NAME = "users";
 
 export async function PUT(request: NextRequest) {
   try {
+    console.log("API Endpoint /api/users/setup hit"); // Debug Log
     const client: MongoClient = await clientPromise;
     const db: Db = client.db(DB_NAME);
     const { email, timeZone, hardinessZone, preferredTheme } =
@@ -21,8 +22,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const setupCompleted =
-      timeZone && hardinessZone && preferredTheme ? true : false;
+    console.log(`Updating user with email: ${email}`); // Debug Log
+
+    const setupCompleted = Boolean(timeZone && hardinessZone && preferredTheme);
 
     const result = await db.collection(COLLECTION_NAME).updateOne(
       { email },
