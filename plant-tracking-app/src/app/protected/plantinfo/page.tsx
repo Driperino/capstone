@@ -1,7 +1,7 @@
 import PlantCard from "@/components/plants/PlantCard";
 
 export default async function Plants() {
-  const response = await fetch("http://localhost:3000/api/houseplants");
+  const response = await fetch("http://localhost:3000/api/houseplants"); //TODO: this is a temp URL
   const plants = await response.json();
 
   const plantCards = plants.map((plant: { _id: string }) => (

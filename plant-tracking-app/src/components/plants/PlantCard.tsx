@@ -8,6 +8,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import axios from "axios";
+import MotionGrowAndFloat from "../animation/MotionGrowAndFloat";
 
 interface Plant {
   _id: string;
@@ -63,96 +64,98 @@ export default function PlantCard({ plantId }: PlantCardProps) {
   }
 
   return (
-    <Card className="max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>{plant.common_name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {plant.description && <p>{plant.description}</p>}
-        <Accordion type="single" collapsible className="mt-4">
-          <AccordionItem value="basic-info">
-            <AccordionTrigger>Scientific Information</AccordionTrigger>
-            <AccordionContent>
-              <p>
-                <strong>Scientific Name:</strong> {plant.scientific_name}
-              </p>
-              <p>
-                <strong>Family:</strong> {plant.family}
-              </p>
-              {plant.origin && (
+    <MotionGrowAndFloat>
+      <Card className="max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle>{plant.common_name}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {plant.description && <p>{plant.description}</p>}
+          <Accordion type="single" collapsible className="mt-4">
+            <AccordionItem value="basic-info">
+              <AccordionTrigger>Scientific Information</AccordionTrigger>
+              <AccordionContent>
                 <p>
-                  <strong>Origin:</strong> {plant.origin}
+                  <strong>Scientific Name:</strong> {plant.scientific_name}
                 </p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="care-instructions">
-            <AccordionTrigger>Care Instructions</AccordionTrigger>
-            <AccordionContent>
-              {plant.care_instructions && (
-                <div>
+                <p>
+                  <strong>Family:</strong> {plant.family}
+                </p>
+                {plant.origin && (
                   <p>
-                    <strong>Water Frequency:</strong>{" "}
-                    {plant.care_instructions.water_frequency}
+                    <strong>Origin:</strong> {plant.origin}
                   </p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="care-instructions">
+              <AccordionTrigger>Care Instructions</AccordionTrigger>
+              <AccordionContent>
+                {plant.care_instructions && (
+                  <div>
+                    <p>
+                      <strong>Water Frequency:</strong>{" "}
+                      {plant.care_instructions.water_frequency}
+                    </p>
+                    <p>
+                      <strong>Light Requirements:</strong>{" "}
+                      {plant.care_instructions.light_requirements}
+                    </p>
+                    <p>
+                      <strong>Humidity:</strong>{" "}
+                      {plant.care_instructions.humidity}
+                    </p>
+                    <p>
+                      <strong>Temperature:</strong>{" "}
+                      {plant.care_instructions.temperature}
+                    </p>
+                    <p>
+                      <strong>Soil:</strong> {plant.care_instructions.soil}
+                    </p>
+                  </div>
+                )}
+                {plant.propagation_methods && (
                   <p>
-                    <strong>Light Requirements:</strong>{" "}
-                    {plant.care_instructions.light_requirements}
+                    <strong>Propagation Methods:</strong>{" "}
+                    {plant.propagation_methods.join(", ")}
                   </p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="more-info">
+              <AccordionTrigger>More Information</AccordionTrigger>
+              <AccordionContent>
+                {plant.toxicity && (
                   <p>
-                    <strong>Humidity:</strong>{" "}
-                    {plant.care_instructions.humidity}
+                    <strong>Toxicity:</strong> {plant.toxicity}
                   </p>
+                )}
+                {plant.common_issues && (
                   <p>
-                    <strong>Temperature:</strong>{" "}
-                    {plant.care_instructions.temperature}
+                    <strong>Common Issues:</strong>{" "}
+                    {plant.common_issues.join(", ")}
                   </p>
+                )}
+                {plant.ideal_container && (
                   <p>
-                    <strong>Soil:</strong> {plant.care_instructions.soil}
+                    <strong>Ideal Container:</strong> {plant.ideal_container}
                   </p>
-                </div>
-              )}
-              {plant.propagation_methods && (
-                <p>
-                  <strong>Propagation Methods:</strong>{" "}
-                  {plant.propagation_methods.join(", ")}
-                </p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="more-info">
-            <AccordionTrigger>More Information</AccordionTrigger>
-            <AccordionContent>
-              {plant.toxicity && (
-                <p>
-                  <strong>Toxicity:</strong> {plant.toxicity}
-                </p>
-              )}
-              {plant.common_issues && (
-                <p>
-                  <strong>Common Issues:</strong>{" "}
-                  {plant.common_issues.join(", ")}
-                </p>
-              )}
-              {plant.ideal_container && (
-                <p>
-                  <strong>Ideal Container:</strong> {plant.ideal_container}
-                </p>
-              )}
-              {plant.growth_rate && (
-                <p>
-                  <strong>Growth Rate:</strong> {plant.growth_rate}
-                </p>
-              )}
-              {plant.fertilizer && (
-                <p>
-                  <strong>Fertilizer:</strong> {plant.fertilizer}
-                </p>
-              )}
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </CardContent>
-    </Card>
+                )}
+                {plant.growth_rate && (
+                  <p>
+                    <strong>Growth Rate:</strong> {plant.growth_rate}
+                  </p>
+                )}
+                {plant.fertilizer && (
+                  <p>
+                    <strong>Fertilizer:</strong> {plant.fertilizer}
+                  </p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+      </Card>
+    </MotionGrowAndFloat>
   );
 }
