@@ -1,5 +1,17 @@
+"use client";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  ChevronDown,
   Sprout,
+  Bell,
+  Users,
   Flower2,
   Leaf,
   Home,
@@ -7,12 +19,11 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 
 import {
   Sidebar,
   SidebarContent,
+  SidebarGroupLabel,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -45,10 +56,23 @@ const items = [
     url: "/protected/routines",
     icon: CalendarRange,
   },
+];
+
+const sidebarItems = [
   {
-    title: "Settings",
-    url: "/protected/settings",
+    name: "Account Settings",
+    route: "/protected/settings/account",
     icon: Settings,
+  },
+  {
+    name: "Notifications",
+    route: "/protected/settings/notifications",
+    icon: Bell,
+  },
+  {
+    name: "User Management",
+    route: "/protected/settings/users",
+    icon: Users,
   },
 ];
 
@@ -91,13 +115,38 @@ export function AppSidebar({ user }: AppSidebarProps) {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a href={item.url} className="flex items-center gap-2">
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              {/* Settings Dropdown */}
+              <Collapsible>
+                <SidebarGroupLabel asChild>
+                  <CollapsibleTrigger className="flex items-center w-full">
+                    <Settings className="flex items-center gap-2" />
+                    <span>Settings</span>
+                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+                  </CollapsibleTrigger>
+                </SidebarGroupLabel>
+                <CollapsibleContent>
+                  {sidebarItems.map((item, index) => (
+                    <SidebarMenuItem key={index}>
+                      <SidebarMenuButton asChild>
+                        <Link
+                          href={item.route}
+                          className="flex items-center gap-2"
+                        >
+                          <item.icon className="size-4" />
+                          <span>{item.name}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

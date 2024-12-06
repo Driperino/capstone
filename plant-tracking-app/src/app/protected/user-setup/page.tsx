@@ -19,7 +19,6 @@ export default function UserSettingsPage() {
   const { data: session } = useSession();
   const [timeZone, setTimeZone] = useState("");
   const [hardinessZone, setHardinessZone] = useState("");
-  const [preferredTheme, setPreferredTheme] = useState("system");
   const [name, setName] = useState("");
   const [availableTimeZones, setAvailableTimeZones] = useState<
     { name: string; label: string }[]
@@ -49,8 +48,6 @@ export default function UserSettingsPage() {
             setName(userData.name || "");
             setTimeZone(userData.timeZone || "");
             setHardinessZone(userData.hardinessZone || "");
-            setPreferredTheme(userData.preferredTheme || "system");
-            setTheme(userData.preferredTheme || "system");
           }
         } catch (error) {
           console.error("Error loading user settings:", error);
@@ -58,7 +55,7 @@ export default function UserSettingsPage() {
       }
     }
     loadUserSettings();
-  }, [session, setTheme]);
+  }, [session]);
 
   const hardinessZones = [
     "1",
@@ -95,7 +92,6 @@ export default function UserSettingsPage() {
         timeZone,
         hardinessZone,
       });
-      setTheme(preferredTheme); // Update the theme based on user preference
       router.push("/protected/dashboard");
     } catch (error) {
       console.error("Error saving user settings:", error);

@@ -47,6 +47,9 @@ export const authOptions = {
             setup: {
               setupCompleted: false, // Default value for setup status
             },
+            earnedBadges: [], // New field to store earned badges
+            uploadedPlants: 0, // New field for number of uploaded plants
+            streakDays: 0, // New field for streak days
           });
         } else {
           // Optionally update user data if needed
@@ -81,6 +84,11 @@ export const authOptions = {
       } else {
         session.user.setupCompleted = false;
       }
+
+      // Add new fields to session
+      session.user.earnedBadges = userData?.earnedBadges || [];
+      session.user.uploadedPlants = userData?.uploadedPlants || 0;
+      session.user.streakDays = userData?.streakDays || 0;
 
       return session;
     },
