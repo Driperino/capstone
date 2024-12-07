@@ -3,7 +3,7 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/components/auth/SessionProvider";
 import { AppSidebar } from "@/components/app-sidebar";
-import { getCurrentUser } from "@/lib/session";
+//import { getCurrentUser } from "@/lib/session";
 import {
   SidebarProvider,
   SidebarTrigger,
@@ -23,7 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
-  const user = await getCurrentUser();
+  const user = session?.user;
 
   return (
     <html lang="en">

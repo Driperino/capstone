@@ -4,7 +4,7 @@ export interface UserActivity {
   _id?: ObjectId;
   email: string;
   week: Date;
-  badges: number;
+  badges: Array<string>;
   plants: number;
   streak: number;
 }

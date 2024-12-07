@@ -1,6 +1,6 @@
 "use client";
-import { signOut } from "next-auth/react"; // Import signOut here
-import { useRouter } from "next/navigation";
+
+import { signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,16 @@ import {
 } from "@/components/ui/select";
 import moment from "moment-timezone";
 
-const UserSettings = ({ session }) => {
-  const router = useRouter();
+// Define the session type explicitly
+type Session = {
+  user: {
+    email: string;
+    name?: string;
+    image?: string;
+  };
+};
+
+const UserSettings = ({ session }: { session: Session }) => {
   const [timeZone, setTimeZone] = useState("");
   const [hardinessZone, setHardinessZone] = useState("");
   const [name, setName] = useState("");
@@ -99,17 +107,8 @@ const UserSettings = ({ session }) => {
     }
 
     try {
-      // Delete the user's account from the database
       await axios.delete(`/api/users/${session.user.email}`);
-      console.log("Account deleted");
-
-      // Perform sign-out and redirect after account deletion
-      await signOut({ redirect: false }); // Ensure signOut is awaited
-      console.log("Signed out");
-
-      // Redirect user to the homepage
-      router.push("/");
-      console.log("Redirecting to homepage");
+      await signOut({ callbackUrl: "/" }); // Redirect to homepage after signing out
     } catch (error) {
       console.error("Error deleting user account:", error);
     }

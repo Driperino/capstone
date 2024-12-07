@@ -32,7 +32,6 @@ export async function PUT(request: NextRequest) {
         $set: {
           timeZone,
           hardinessZone,
-          preferredTheme,
           "setup.setupCompleted": setupCompleted,
         },
       }

@@ -14,7 +14,6 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import moment from "moment-timezone";
 import { Input } from "@/components/ui/input";
-import { set } from "react-hook-form";
 
 export default function UserSettingsPage() {
   const { data: session } = useSession();

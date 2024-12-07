@@ -47,7 +47,7 @@ type TotalDataItem = {
   maxStreak: number;
 };
 
-export const ActivityTimelineCard = ({ userId }: { userId: string }) => {
+export const ActivityTimelineCard = ({ email }: { email: string }) => {
   const [chartData, setChartData] = useState<ChartDataItem[]>([]);
   const [totalData, setTotalData] = useState<TotalDataItem | null>(null);
   const [activeChart, setActiveChart] =
@@ -62,7 +62,7 @@ export const ActivityTimelineCard = ({ userId }: { userId: string }) => {
 
         const response = await axios.get("/api/user-activity", {
           params: {
-            userId,
+            email, // Use email instead of userId
             startDate: startDate.toISOString(),
             endDate: endDate.toISOString(),
           },
@@ -87,10 +87,10 @@ export const ActivityTimelineCard = ({ userId }: { userId: string }) => {
       }
     };
 
-    if (userId) {
+    if (email) {
       fetchUserData();
     }
-  }, [userId]);
+  }, [email]);
 
   const weeklyTotal = useMemo(
     () => ({

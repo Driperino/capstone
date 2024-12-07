@@ -1,9 +1,10 @@
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import clientPromise from "@/lib/mongodb";
 
 export default async function Home() {
-  const session = await getServerSession();
+  const session = await auth();
+
   if (!session || !session.user) {
     redirect("/api/auth/signin");
   }
