@@ -3,40 +3,25 @@
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import MotionGrowAndFloat from "@/components/animation/MotionGrowAndFloat";
-import axios from "axios";
 
 type GamificationData = {
   badges: number;
   plants: number;
   streak: number;
-  recentBadges: string[];
 };
 
-export const GamificationCard = ({ userEmail }: { userEmail: string }) => {
+type BadgeDetail = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export const GamificationCard = ({ userId }: { userId: string }) => {
   const [userData, setUserData] = useState<GamificationData | null>(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`/api/users/${userEmail}`);
-        const user = response.data;
-
-        // Process user data as required for badges, plants, and streak
-        setUserData({
-          badges: user.earnedBadges?.length || 0,
-          plants: user.uploadedPlants || 0,
-          streak: user.streakDays || 0,
-          recentBadges: user.earnedBadges?.slice(-10) || [],
-        });
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    if (userEmail) {
-      fetchUserData();
-    }
-  }, [userEmail]);
+  console.log("userData in card state", userData);
+  console.log("userId in card state", userId);
+  const [badgeDetails, setBadgeDetails] = useState<BadgeDetail[]>([]);
+  console.log("badgeDetails in card state", badgeDetails);
 
   return (
     <MotionGrowAndFloat>
@@ -51,8 +36,8 @@ export const GamificationCard = ({ userEmail }: { userEmail: string }) => {
               <h3>Most Recent Badges</h3>
               <hr />
               <ol>
-                {userData.recentBadges.map((badge, index) => (
-                  <li key={index}>{badge}</li>
+                {badgeDetails.map((badge, index) => (
+                  <li key={index}>{badge.name}</li>
                 ))}
               </ol>
               <hr />

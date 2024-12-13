@@ -1,12 +1,21 @@
 import clientPromise from "@/lib/mongodb";
-import { MongoClient, Db } from "mongodb";
+import { MongoClient, Db, ObjectId } from "mongodb";
 
+// Fetch a user by _id
+export const getUserById = async (id: string) => {
+  const client: MongoClient = await clientPromise;
+  const db: Db = client.db(process.env.DB_NAME || "leafmatrix");
+  return await db.collection("users").findOne({ _id: new ObjectId(id) });
+};
+
+// Fetch a user by email (still useful for login scenarios)
 export const getUserByEmail = async (email: string) => {
   const client: MongoClient = await clientPromise;
   const db: Db = client.db(process.env.DB_NAME || "leafmatrix");
   return await db.collection("users").findOne({ email });
 };
 
+// Create a new user
 export const createUser = async (user: {
   name?: string;
   email?: string;
@@ -15,7 +24,7 @@ export const createUser = async (user: {
   const client: MongoClient = await clientPromise;
   const db: Db = client.db(process.env.DB_NAME || "leafmatrix");
 
-  await db.collection("users").insertOne({
+  const result = await db.collection("users").insertOne({
     name: user.name,
     email: user.email,
     image: user.image,
@@ -25,13 +34,30 @@ export const createUser = async (user: {
     uploadedPlants: 0,
     streakDays: 0,
   });
+
+  // Return the newly created user ID
+  return result.insertedId;
 };
 
-export const updateUser = async (email: string, updates: any) => {
+// Update a user by _id
+export const updateUserById = async (id: string, updates: any) => {
   const client: MongoClient = await clientPromise;
   const db: Db = client.db(process.env.DB_NAME || "leafmatrix");
 
-  await db.collection("users").updateOne(
+  return await db.collection("users").updateOne(
+    { _id: new ObjectId(id) },
+    {
+      $set: updates,
+    }
+  );
+};
+
+// Update a user by email (useful for legacy cases, but not ideal)
+export const updateUserByEmail = async (email: string, updates: any) => {
+  const client: MongoClient = await clientPromise;
+  const db: Db = client.db(process.env.DB_NAME || "leafmatrix");
+
+  return await db.collection("users").updateOne(
     { email },
     {
       $set: updates,

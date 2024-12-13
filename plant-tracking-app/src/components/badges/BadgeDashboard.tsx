@@ -58,7 +58,7 @@ export function BadgeDashboard({ userId }: { userId: string }) {
     if (!selectedBadge || (!userId && !manualUserId)) return;
 
     try {
-      await axios.post("/api/badges/award-badge", {
+      await axios.post("/api/badges/award-badges", {
         userId: userId || manualUserId,
         badgeId: selectedBadge,
       });

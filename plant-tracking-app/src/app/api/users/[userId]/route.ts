@@ -6,30 +6,30 @@ import { ObjectId } from "mongodb";
 export async function POST(req: NextRequest) {
   try {
     const db = await connectToDatabase();
-    const { userId, week, badges, plants, streak } = await req.json();
+    const { _id, week, badges, plants, streak } = await req.json();
 
-    if (!userId || !ObjectId.isValid(userId)) {
+    if (!_id) {
       return NextResponse.json(
-        { error: "Missing or invalid userId" },
+        { error: "Missing required parameter: _id" },
         { status: 400 }
       );
     }
 
-    const objectId = new ObjectId(userId);
+    const objectId = new ObjectId(_id);
 
     const userActivityCollection =
       db.collection<UserActivity>("userActivities");
     const userTotalCollection = db.collection<UserTotal>("userTotals");
 
     const activity = await userActivityCollection.findOneAndUpdate(
-      { userId: objectId, week: new Date(week) },
+      { _id: objectId, week: new Date(week) },
       { $set: { badges, plants, streak } },
       { upsert: true, returnDocument: "after" }
     );
 
     // Update lifetime totals
     await userTotalCollection.updateOne(
-      { userId: objectId },
+      { _id: objectId },
       {
         $inc: { totalBadges: badges, totalPlants: plants },
         $max: { maxStreak: streak },
@@ -62,6 +62,7 @@ export async function GET(req: NextRequest) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
+    // Validate parameters
     if (!userId || !startDate || !endDate || !ObjectId.isValid(userId)) {
       return NextResponse.json(
         { error: "Missing or invalid required parameters" },
@@ -75,6 +76,7 @@ export async function GET(req: NextRequest) {
       db.collection<UserActivity>("userActivities");
     const userTotalCollection = db.collection<UserTotal>("userTotals");
 
+    // Fetch activities and totals concurrently
     const [activities, totals] = await Promise.all([
       userActivityCollection
         .find({
@@ -85,7 +87,7 @@ export async function GET(req: NextRequest) {
         .toArray(),
       userTotalCollection.findOne({ userId: objectId }),
     ]);
-
+    // Return the results
     return NextResponse.json({ activities, totals });
   } catch (error) {
     console.error("Error fetching user activities:", error);

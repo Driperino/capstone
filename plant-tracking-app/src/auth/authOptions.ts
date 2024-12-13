@@ -1,5 +1,11 @@
 import { providers } from "@/auth/providersConfig";
-import { getUserByEmail, createUser, updateUser } from "./userUtils";
+import {
+  getUserById,
+  getUserByEmail,
+  createUser,
+  updateUserById,
+} from "./userUtils";
+import { ExtendedSessionUser } from "@/types/types"; // Centralized type for session user
 
 export const authOptions = {
   providers,
@@ -10,6 +16,7 @@ export const authOptions = {
       }
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
+
     async signIn({
       user,
     }: {
@@ -19,30 +26,40 @@ export const authOptions = {
         const existingUser = await getUserByEmail(user.email);
 
         if (!existingUser) {
-          await createUser(user);
+          const newUser = await createUser(user);
+          return !!newUser;
         } else {
-          await updateUser(user.email, {
+          await updateUserById(existingUser._id, {
             name: user.name,
             image: user.image,
             lastLogin: new Date(),
           });
+          return true;
         }
-
-        return true;
       } catch (error) {
         console.error("Error creating or updating user:", error);
         return false;
       }
     },
-    async session({ session }: any) {
+
+    async session({ session }: { session: any }) {
       try {
         const userData = await getUserByEmail(session.user?.email);
 
         if (userData) {
-          session.user.setupCompleted = userData.setup?.setupCompleted || false;
-          session.user.earnedBadges = userData.earnedBadges || [];
-          session.user.uploadedPlants = userData.uploadedPlants || 0;
-          session.user.streakDays = userData.streakDays || 0;
+          // Add additional fields to the session user
+          const sessionUser: ExtendedSessionUser = {
+            id: userData._id.toString(),
+            name: userData.name || "",
+            email: userData.email || "",
+            image: userData.image || "",
+            setupCompleted: userData.setup?.setupCompleted || false,
+            earnedBadges: userData.earnedBadges || [],
+            uploadedPlants: userData.uploadedPlants || 0,
+            streakDays: userData.streakDays || 0,
+          };
+
+          session.user = sessionUser; // Attach extended user object to the session
         }
       } catch (error) {
         console.error(
